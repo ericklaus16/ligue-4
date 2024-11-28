@@ -17,6 +17,19 @@ header {
     border-bottom: 1px solid #cdcdd2;
 }
 
+.company {
+    display: flex;
+    width: 7%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company svg {
+    size: 30px;
+    fill: #007ed0;
+    margin-right: 10px;
+}
+
 header a {
     text-decoration: none;
     color: #030303;
@@ -96,4 +109,5 @@ header a {
 
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
 }
