@@ -4,8 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Investment Optimizer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Oxygen:wght@300;400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header>
+        <div>
+            <p class="company-name">OptiInvest</p>
+        </div>
+        <div class="header-links">
+            <a href="#">Início</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+            <a href="#">Ajuda</a>
+        </div>
+    </header>
+
+    <form class="investment-area">
+        <div class="first-text">
+            <p class="main-title">Entrada do Investimento</p>
+            <p class="sub-title">Insira seus dados para calcular o portfólio de investimento ideal.</p>
+        </div>
+        
+        <div class="investment-amount-area">
+            <label class="investment-amount-text" for="investment-amount">Valor disponível para investir (em R$)</label>
+            <input type="number" id="investment-amount" name="investment-amount" placeholder="138"/>
+        </div>
+        
+        <div class="investment-type-area">
+            <label class="investment-type-text">Escolha Ações ou Fundos</label>
+
+            <div class="investment-type-cards">
+                <div class="investment-type-card">
+                    <p class="investment-type-card-text">Ações</p>
+                    <p class="investment-type-card-subtext">Invista em empresas líderes com potencial de crescimento.</p>
+                    <input type="checkbox" id="investment-type-stocks" name="investment-type" value="stocks"/>
+                </div>
+    
+                <div class="investment-type-card">
+                    <p class="investment-type-card-text">Fundos de Investimento</p>
+                    <p class="investment-type-card-subtext">Portfólio de renda fixa de baixo risco que oferece retornos estáveis.</p>
+                    <input type="checkbox" id="investment-type-stocks" name="investment-type" value="stocks"/>
+                </div>
+            </div>
+        </div>
+
+        <div class="investment-risk-area">
+            <label class="investment-risk-text">Nível de risco aceitável</label>
+
+            <div class="investment-risks">
+                <div class="investment-risk">
+                    <input type="radio" id="risk-low" name="risk" value="low"/>
+                    <label for="risk-low">Baixo</label>
+                </div>
+                <div class="investment-risk">
+                    <input type="radio" id="risk-medium" name="risk" value="medium"/>
+                    <label for="risk-medium">Médio</label>
+                </div>
+                <div class="investment-risk">
+                    <input type="radio" id="risk-high" name="risk" value="high"/>
+                    <label for="risk-high">Alto</label>
+                </div>
+            </div>
+        </div>
+        
+        <input type="submit" class="submit-input" value="Calcular portfólio ideal"/>
+    </form>
+
     <h1>Bem-vindo ao Otimizador de Investimentos, {{user}}!</h1>
+
+    <link rel="stylesheet" href="../static/css/index.css" />
+    <link rel="stylesheet" href="../static/css/card.css" />
+    <link rel="stylesheet" href="../static/css/risks.css" />
 </body>
 </html>
