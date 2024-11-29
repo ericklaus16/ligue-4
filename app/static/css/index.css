@@ -22,7 +22,7 @@
     font-weight: bolder;
 }
 
-#investment-amount {
+#investment-amount, #investments {
     width: 100%;
     height: 45px;
     margin-top: 15px;

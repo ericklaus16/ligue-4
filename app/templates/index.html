@@ -49,14 +49,14 @@
                 <div class="investment-type-card">
                     <p class="investment-type-card-text">Fundos de Investimento</p>
                     <p class="investment-type-card-subtext">Portfólio de renda fixa de baixo risco que oferece retornos estáveis.</p>
-                    <input type="checkbox" id="investment-type-stocks" name="investment-type" value="stocks"/>
+                    <input type="checkbox" id="investment-type-funds" name="investment-type" value="funds"/>
                 </div>
             </div>
         </div>
 
         <div class="investment-interest-area" style="display: none">
-            <label class="investment-amount-text" for="investment-amount">Ações ou Fundos de Interesse (separadas por vírgula)</label>
-            <input type="number" id="investment-amount" name="investment-amount" placeholder="AMAR3, OIBR3, TESL, GOGL34"/>
+            <label class="investment-amount-text" for="investments">Ações ou Fundos de Interesse (separadas por vírgula)</label>
+            <input type="text" id="investments" name="investments" placeholder="AMAR3, OIBR3, TESL, GOGL34"/>
         </div>
 
         <div class="investment-risk-area">
@@ -78,7 +78,7 @@
             </div>
         </div>
         
-        <input type="submit" class="submit-input" value="Calcular portfólio ideal"/>
+        <input type="submit" onclick="handleCalculateInvestment()" class="submit-input" value="Calcular portfólio ideal"/>
     </form>
 
     <!-- <h1>Bem-vindo ao Otimizador de Investimentos, {{user}}!</h1> -->
