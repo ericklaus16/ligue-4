@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Investment Optimizer</title>
+    <title>OptiInvest - Otimizador de Investimentos</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,7 +25,7 @@
         </div>
     </header>
 
-    <form class="investment-area">
+    <form class="investment-area" action="/results">
         <div class="first-text">
             <p class="main-title">Entrada do Investimento</p>
             <p class="sub-title">Insira seus dados para calcular o portfólio de investimento ideal.</p>
@@ -76,8 +76,10 @@
         <input type="submit" class="submit-input" value="Calcular portfólio ideal"/>
     </form>
 
-    <h1>Bem-vindo ao Otimizador de Investimentos, {{user}}!</h1>
+    <!-- <h1>Bem-vindo ao Otimizador de Investimentos, {{user}}!</h1> -->
 
+    <link rel="stylesheet" href="../static/css/header.css" />
+    <link rel="stylesheet" href="../static/css/default.css" />
     <link rel="stylesheet" href="../static/css/index.css" />
     <link rel="stylesheet" href="../static/css/card.css" />
     <link rel="stylesheet" href="../static/css/risks.css" />

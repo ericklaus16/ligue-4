@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Oxygen:wght@300;400;700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <title>OptiInvest - Resultados</title>
+</head>
+<body>
+    <header>
+        <div class="company">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-graph-up-arrow" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm10 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-1 0V4.9l-3.613 4.417a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61L13.445 4H10.5a.5.5 0 0 1-.5-.5"/>
+            </svg>
+            <p class="company-name">OptiInvest</p>
+        </div>
+        <!-- <div class="header-links">
+            <a href="#">Início</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+            <a href="#">Ajuda</a>
+        </div> -->
+    </header>
+
+    <div class="result-cards">
+        <div class="result-type-card">
+            <p class="result-type-card-text">Previsão de retorno</p>
+            <img class="result-forecast-graph" src="{{url_for('static', filename=forecast_plot_url)}}" />
+            <p class="result-type-card-subtext">Esse gráfico ilustra o retorno esperado durante o próximo ano baseado na análise atual de mercado.</p>
+        </div>
+
+        <div class="result-type-card">
+            <p class="result-type-card-text">Distribuição do Portfólio</p>
+            <img class="result-forecast-graph" src="{{url_for('static', filename=distribution_plot_url)}}" />
+            <p class="result-type-card-subtext">Esse gráfico de setores mostra a alocação dos recursos distruibo entre diferentes categorias no seu portfólio.</p>
+        </div>
+
+        <div class="result-type-card">
+            <p class="result-type-card-text">Nível de Risco</p>
+            <img class="result-forecast-graph" src="{{url_for('static', filename=risk_plot_url)}}" />
+            <p class="result-type-card-subtext">Uma análise do risco associado com sua configuração de portfólio atual.</p>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="../static/css/default.css">
+    <link rel="stylesheet" href="../static/css/results.css">
+    <link rel="stylesheet" href="../static/css/header.css">
+</body>
+</html>
