@@ -1,12 +1,12 @@
 checkedStocks = false;
 checkedFunds = false;
 
-document.querySelector("#investment-type-stocks").addEventListener("click", function() {
+document.querySelector("#investment-type-stocks").addEventListener("click", () => {
     checkedStocks = !checkedStocks;
     toggleInvestmentInterest()
 })
 
-document.querySelector("#investment-type-funds").addEventListener("click", function() {
+document.querySelector("#investment-type-funds").addEventListener("click", () => {
     checkedFunds = !checkedFunds;
     toggleInvestmentInterest()
 })
