@@ -1,4 +1,5 @@
 import yfinance as yf
+import numpy as np
 
 investimentos = []
 
@@ -68,33 +69,46 @@ ativos = ["AAPL", "MSFT", "GOOG", "TSLA"]  # Tickers de ações da Apple, Micros
 #     calcular_risco_ativos(ativo)
 
 def aprofundamento_iterativo(ativos, profundidade_maxima):
-    # Piazada, aqui é o seguinte: a gente vai fazer um loop para cada ativo
-    # e dentro desse loop, a gente vai fazer outro loop para cada profundidade
-    # que a gente quer calcular. Então, a cada iteração, a gente vai calcular
-    # o risco de um ativo em uma profundidade diferente.
-
     melhores_portfolios = []
 
     def avaliar_portfolio(portfolio):
-        # Calcular volatilidade media do portfólio
+        volatilidades = [calcular_volatilidade(yf.download(ativo, period="1y")['Adj Close']) for ativo in portfolio]
+        retornos_medios = [calcular_retorno_medio(yf.download(ativo, period="1y")['Adj Close']) for ativo in portfolio]
+        sharpe_ratios = [calcular_indice_sharpe(retorno, volatilidade) for retorno, volatilidade in zip(retornos_medios, volatilidades)]
 
-        # Calcular índice Sharpe médio do portfólio
+        volatilidade_media = np.mean(volatilidades)
+        sharpe_ratio_medio = np.mean(sharpe_ratios)
 
-        # Retornar os dois valores
-        return None, None
-    
+        return volatilidade_media, sharpe_ratio_medio
+
     def buscar_portfolio(ativos, profundidade_total, portfolio_atual):
-        # Se a profundida máxima for alcançada, avaliar o portfólio
+        if profundidade_total == 0:
+            volatilidade_media, sharpe_ratio_medio = avaliar_portfolio(portfolio_atual)
+            risco = classificar_risco(volatilidade_media, sharpe_ratio_medio)
+            melhores_portfolios.append({
+                "Portfolio": portfolio_atual,
+                "Volatilidade Média": volatilidade_media,
+                "Sharpe Ratio Médio": sharpe_ratio_medio,
+                "Classificação de Risco": risco
+            })
+            return
 
-        # Loop para iterar sobre os ativos e explorar as combinações
+        for i in range(len(ativos)):
+            novo_portfolio = portfolio_atual + [ativos[i]]
+            buscar_portfolio(ativos[i+1:], profundidade_total - 1, novo_portfolio)
 
-        # Acho que esse método não vai retornar nada
-
-        return None
-
-    # buscar_portfolio(ativos, profundidade_maxima, [])
-
+    buscar_portfolio(ativos, profundidade_maxima, [])
     return melhores_portfolios
+
+ativos = ["AAPL", "MSFT", "GOOG", "TSLA"]
+profundidade_maxima = 2
+melhores_portfolios = aprofundamento_iterativo(ativos, profundidade_maxima)
+
+for portfolio in melhores_portfolios:
+    print(f"Portfolio: {portfolio['Portfolio']}")
+    print(f"Volatilidade Média: {portfolio['Volatilidade Média']:.4f}")
+    print(f"Sharpe Ratio Médio: {portfolio['Sharpe Ratio Médio']:.4f}")
+    print(f"Classificação de Risco: {portfolio['Classificação de Risco']}\n")
 
 def poda_alfa_beta(ativos, profundidade_maxima, alpha, beta):
     # Piazada, aqui é o seguinte: a gente vai fazer um loop para cada ativo
