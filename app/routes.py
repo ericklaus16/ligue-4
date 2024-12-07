@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 import yfinance as yf
 
 from .utils import create_forecast_plot, create_distribution_plot, create_risk_plot
-from .calculations import calcular_risco_ativos
+from .calculations import calcular_risco_ativos, aprofundamento_iterativo, poda_alfa_beta
 
 main = Blueprint('main', __name__)
 
@@ -27,21 +27,23 @@ def calcular_risco():
     investment_interest = data.get("investmentInterest")  # Lista de ativos
     investment_risk = data.get("investmentRisk")  # Risco selecionado pelo usuário
 
-    resultados = []
+    erros = []
 
     for ativo in investment_interest:
         try:
             ativo_br = ativo + ".SA"
             calcular_risco_ativos(ativo_br)
         except Exception as e:
-            resultados.append({
+            erros.append({
                 "ativo": ativo,
                 "erro": f"Erro ao calcular: {str(e)}"
             })  
+    
+    melhor_portfolio = aprofundamento_iterativo(investment_amount, investment_risk)
 
     return jsonify({
-        "investment_type": investment_type,
         "investment_amount": investment_amount,
         "investment_risk": investment_risk,
-        "resultados": resultados
+        "melhor_portfolio": melhor_portfolio,
+        "erros": erros
     })
