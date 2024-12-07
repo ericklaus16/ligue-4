@@ -27,21 +27,18 @@
 
     <div class="result-cards">
         <div class="result-type-card">
-            <p class="result-type-card-text">Previsão de retorno</p>
-            <img class="result-forecast-graph" src="{{url_for('static', filename=forecast_plot_url)}}" />
-            <p class="result-type-card-subtext">Esse gráfico ilustra o retorno esperado durante o próximo ano baseado na análise atual de mercado.</p>
+            <p class="result-type-card-text">Distribuição do Portfólio</p>
+            <img class="result-forecast-graph" src="../static/plots/dist_plot.png" title="Esse gráfico de setores mostra a alocação dos recursos distribuida entre diferentes categorias no seu portfólio."/>
         </div>
 
         <div class="result-type-card">
-            <p class="result-type-card-text">Distribuição do Portfólio</p>
-            <img class="result-forecast-graph" src="{{url_for('static', filename=distribution_plot_url)}}" />
-            <p class="result-type-card-subtext">Esse gráfico de setores mostra a alocação dos recursos distruibo entre diferentes categorias no seu portfólio.</p>
+            <p class="result-type-card-text">Drawdown</p>
+            <img class="result-forecast-graph" src="../static/plots/plot.png" title="O drawdown é a diferença entre o pico e a queda de um portfólio (ou ativo), e ajuda a visualizar a magnitude da perda de valor do portfólio durante uma crise ou retração."/>
         </div>
 
         <div class="result-type-card">
             <p class="result-type-card-text">Nível de Risco</p>
-            <img class="result-forecast-graph" src="{{url_for('static', filename=risk_plot_url)}}" />
-            <p class="result-type-card-subtext">Uma análise do risco associado com sua configuração de portfólio atual.</p>
+            <img class="result-forecast-graph" src="../static/plots/risk_plot.png" title="Uma análise do risco associado com sua configuração de portfólio atual."/>
         </div>
     </div>
 

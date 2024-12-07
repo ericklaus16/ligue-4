@@ -6,6 +6,8 @@ from .calculations import calcular_risco_ativos, aprofundamento_iterativo, poda_
 
 main = Blueprint('main', __name__)
 
+melhor_portfolio = None
+
 @main.route('/')
 def home():
     user = "Eric"
@@ -13,11 +15,7 @@ def home():
 
 @main.route('/results')
 def about():
-    forecast_plot_path = create_forecast_plot()  
-    distribution_plot_path = create_distribution_plot()
-    risk_plot_path = create_risk_plot()
-
-    return render_template('results.html', forecast_plot_url=forecast_plot_path, distribution_plot_url=distribution_plot_path, risk_plot_url=risk_plot_path)
+    return render_template('results.html')
 
 @main.route('/calcular-risco', methods=['POST'])
 def calcular_risco():
@@ -40,6 +38,9 @@ def calcular_risco():
             })  
     
     melhor_portfolio = aprofundamento_iterativo(investment_amount, investment_risk)
+    create_forecast_plot(melhor_portfolio)  
+    create_distribution_plot(melhor_portfolio)
+    create_risk_plot(melhor_portfolio)
 
     return jsonify({
         "investment_amount": investment_amount,

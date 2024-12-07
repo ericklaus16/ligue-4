@@ -2,3 +2,4 @@ flask
 matplotlib
 yfinance
 numpy
+seaborn

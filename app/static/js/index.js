@@ -20,8 +20,26 @@ function handleCalculateInvestment() {
     let investmentType = document.querySelector("#investment-type-stocks:checked").value;
     let investmentInterest = document.querySelector("#investments").value.split(",").map(item => item.trim()).filter(item => item);
     let investmentRisk = document.querySelector('input[name="risk"]:checked').value;
-    alert(investmentType + " " + investmentAmount + " " + investmentInterest + " " + investmentRisk);
 
+    let timerInterval;
+
+    Swal.fire({
+        title: "Olá, tudo bem?",
+        html: "Por favor aguarde <b></b> segundos enquanto nosso sistema faz alguns cálculos!",
+        timer: 3000, 
+        timerProgressBar: true,
+        didOpen: () => {
+            Swal.showLoading();  // Exibe o carregamento
+            const timer = Swal.getPopup().querySelector("b");
+            timerInterval = setInterval(() => {
+                timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(2)}`;
+            }, 100);
+        },
+        willClose: () => {
+            clearInterval(timerInterval); 
+        }
+    });
+    
     fetch('/calcular-risco', {
         method: 'POST',
         headers: {
@@ -33,8 +51,15 @@ function handleCalculateInvestment() {
             investmentInterest,
             investmentRisk
         })
-    }).then(response => response.json())
-    .then(data => {
-        console.log(data)
     })
+    .then(response => response.json()) 
+    .then(data => {
+        Swal.close(); 
+        window.location = '/results'; 
+    })
+    .catch(error => {
+        Swal.close();
+        console.error("Erro ao calcular risco:", error); 
+        Swal.fire('Erro!', 'Houve um problema ao processar os dados. Tente novamente mais tarde.', 'error');
+    });
 }
