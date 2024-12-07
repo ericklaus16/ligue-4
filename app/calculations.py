@@ -61,6 +61,7 @@ def calcular_risco_ativos(ticker, periodo="1y"):
 
 def aprofundamento_iterativo(valor_total, risco_desejado):
     melhores_portfolios = []
+    profundidade_maxima = len(investimentos) if len(investimentos) < 5 else 5
 
     # Filtrar os ativos pelo risco desejado
     ativos_filtrados_por_risco = [
