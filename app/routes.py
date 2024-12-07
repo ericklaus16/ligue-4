@@ -38,6 +38,7 @@ def calcular_risco():
             })  
     
     melhor_portfolio = aprofundamento_iterativo(investment_amount, investment_risk)
+    
     create_forecast_plot(melhor_portfolio)  
     create_distribution_plot(melhor_portfolio)
     create_risk_plot(melhor_portfolio)

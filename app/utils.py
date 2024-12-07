@@ -11,6 +11,10 @@ from datetime import datetime
 import os
 
 def create_forecast_plot(melhor_portfolio):
+    if not melhor_portfolio["Portfolio"]:
+        print("Erro: 'Portfolio' não encontrado ou vazio em 'melhor_portfolio'.")
+        return "Erro ao gerar gráfico: dados inválidos."
+
     ativos = [ativo["Ativo"] for ativo in melhor_portfolio["Portfolio"]]
     alocacao = melhor_portfolio["alocacao"]
     
@@ -70,7 +74,7 @@ def create_forecast_plot(melhor_portfolio):
     return f'../static/plots/plot.png'
 
 def create_distribution_plot(melhor_portfolio):
-    ativos = [ativo["Ativo"] for ativo in melhor_portfolio["Portfolio"]]
+    ativos = list(set([ativo["Ativo"] for ativo in melhor_portfolio["Portfolio"]]))
     alocacao = melhor_portfolio["alocacao"]
     total_investido = sum(alocacao.values())
     

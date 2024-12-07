@@ -61,13 +61,14 @@ def calcular_risco_ativos(ticker, periodo="1y"):
 
 def aprofundamento_iterativo(valor_total, risco_desejado):
     melhores_portfolios = []
-    profundidade_maxima = len(investimentos) if len(investimentos) < 5 else 5
+    profundidade_maxima = len(investimentos)
 
     # Filtrar os ativos pelo risco desejado
     ativos_filtrados_por_risco = [
         ativo for ativo in investimentos if ativo["Classificação de Risco"].lower() == risco_desejado.lower()
     ]
 
+    print(f"Ativos filtrados por risco ({risco_desejado}): {len(ativos_filtrados_por_risco)} ativos")
     if not ativos_filtrados_por_risco:
         return { "erro": "Nenhum ativo encontrado com o risco desejado" }
 
@@ -104,6 +105,11 @@ def aprofundamento_iterativo(valor_total, risco_desejado):
             buscar_portfolio(ativos[i+1:], profundidade_total - 1, novo_portfolio)
 
     buscar_portfolio(ativos_filtrados_por_risco, profundidade_maxima, [])
+
+    print(f"Melhores portfólios encontrados: {len(melhores_portfolios)}")
+
+    if not melhores_portfolios:
+        return { "erro": "Nenhum portfolio encontrado para as condições especificadas" }
 
     melhor_portfolio = max(
         melhores_portfolios,
