@@ -63,67 +63,69 @@ def aprofundamento_iterativo(valor_total, risco_desejado):
     melhores_portfolios = []
     profundidade_maxima = len(investimentos)
 
-    # Aqui está sendo filtrado pela primeira vez, e abaixo na função de busca, está sendo filtrado novamente baseado nos valores de classificar_riscos,
-    # está certo?
+    # Filtrar os ativos pelo risco desejado
     ativos_filtrados_por_risco = [
         ativo for ativo in investimentos if ativo["Classificação de Risco"].lower() == risco_desejado.lower()
     ]
 
+    print(f"Ativos filtrados por risco ({risco_desejado}): {len(ativos_filtrados_por_risco)} ativos")
     if not ativos_filtrados_por_risco:
-        return {"erro": "Nenhum ativo encontrado com o risco desejado"}
+        return { "erro": "Nenhum ativo encontrado com o risco desejado" }
 
     def avaliar_portfolio(portfolio):
         volatilidades = [ativo["Volatilidade"] for ativo in portfolio]
         sharpe_ratios = [ativo["Índice de Sharpe"] for ativo in portfolio]
+
         volatilidade_media = np.mean(volatilidades)
         sharpe_ratio_media = np.mean(sharpe_ratios)
+
         return volatilidade_media, sharpe_ratio_media
 
-    def busca_profundidade_limitada(ativos, limite_profundidade, portfolio_atual):
-        if limite_profundidade == 0 or not ativos:
-            if portfolio_atual:
-                volatilidade_media, sharpe_ratio_media = avaliar_portfolio(portfolio_atual)
-                risco = classificar_risco(volatilidade_media, sharpe_ratio_media) # Não sei se está certo, pois a condição para sair do for loop é 
-                                                                                # o primeiro ativo achado que seja do risco (classificar_riscos) que o usuário deseja (melhores_portfolios)
-                if risco.lower() == risco_desejado.lower():
-                    melhores_portfolios.append({
-                        "Portfolio": portfolio_atual,
-                        "Volatilidade Média": volatilidade_media,
-                        "Sharpe Ratio Médio": sharpe_ratio_media,
-                        "Classificação de Risco": risco
-                    })
-            return
-        else:
-            for i in range(len(ativos)):
-                novo_portfolio = portfolio_atual + [ativos[i]]
-                busca_profundidade_limitada(ativos[i+1:], limite_profundidade - 1, novo_portfolio)
+    def buscar_portfolio(ativos, profundidade_total, portfolio_atual):
+        if profundidade_total == 0: ## Condição de parada
+            volatilidade_media, sharpe_ratio_media = avaliar_portfolio(portfolio_atual)
+            
+            if volatilidade_media < 0.02 and sharpe_ratio_media > 1.0 and risco_desejado == "low":
+                risco = "Baixo Risco"
+            elif 0.02 <= volatilidade_media < 0.05 or sharpe_ratio_media >= 0.5 and risco_desejado == "medium":
+                risco = "Médio Risco"
+            else:
+                risco = "Alto Risco"
 
-    # Loop externo para o aprofundamento iterativo
-    for profundidade in range(1, profundidade_maxima + 1):
-        print(f"Iniciando busca com profundidade limite: {profundidade}")
-        busca_profundidade_limitada(ativos_filtrados_por_risco, profundidade, [])
-        if melhores_portfolios:
-            break  # Se encontrar portfólios válidos, interrompe a busca
+            melhores_portfolios.append({
+                "Portfolio": portfolio_atual,
+                "Volatilidade Média": volatilidade_media,
+                "Sharpe Ratio Médio": sharpe_ratio_media,
+                "Classificação de Risco": risco
+            })
+            return
+
+        for i in range(len(ativos)):
+            novo_portfolio = portfolio_atual + [ativos[i]]
+            buscar_portfolio(ativos[i+1:], profundidade_total - 1, novo_portfolio)
+
+    buscar_portfolio(ativos_filtrados_por_risco, profundidade_maxima, [])
+
+    print(f"Melhores portfólios encontrados: {len(melhores_portfolios)}")
 
     if not melhores_portfolios:
-        return {"erro": "Nenhum portfólio encontrado para as condições especificadas"}
+        return { "erro": "Nenhum portfolio encontrado para as condições especificadas" }
 
-    # Seleciona o melhor portfólio
     melhor_portfolio = max(
         melhores_portfolios,
-        key=lambda x: (x["Sharpe Ratio Médio"], -x["Volatilidade Média"])
+        key=lambda x: (x["Sharpe Ratio Médio"], x["Volatilidade Média"])
     )
 
-    # Calcula a alocação
     total_sharpe = sum([ativo["Índice de Sharpe"] for ativo in melhor_portfolio["Portfolio"]])
+
     alocacao = {
-        ativo["Ativo"]: float(valor_total) * (ativo["Índice de Sharpe"] / total_sharpe)
+        ativo["Ativo"]: float(valor_total) * float(ativo["Índice de Sharpe"] / total_sharpe)
         for ativo in melhor_portfolio["Portfolio"]
     }
 
     melhor_portfolio["alocacao"] = alocacao
-    # print(f"Melhor portfólio encontrado: {melhor_portfolio}")
-    
+    # print(melhor_portfolio["alocacao"])
+
     return melhor_portfolio
 
 def poda_alfa_beta(ativos, profundidade_maxima, alpha, beta):
