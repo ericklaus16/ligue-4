@@ -29,25 +29,43 @@ def calcular_alocacao(portfolio, budget, data):
 
     return alocacao
 
-def aprofundamento_iterativo(data, budget, risk_level):
-    best_portfolio = None
-    best_return = float("-inf")
-    max_risk = {"low": 0.05, "medium": 0.15, "high": 0.3}[risk_level]
+def aprofundamento_iterativo_recursivo(data, max_depth, current_depth, portfolio, risk_level, visited, best):
+    if(current_depth > max_depth):
+        return best
     
-    for r in range(1, len(data) + 1):
-        for combo in combinations(data.keys(), r):
-            portfolio_return = sum(data[asset]["average_return"] for asset in combo)
-            portfolio_risk = sum(data[asset]["risk"] for asset in combo)
-            
-            if portfolio_risk <= max_risk and portfolio_return > best_return:
-                best_portfolio = combo
-                best_return = portfolio_return
-                
-    return best_portfolio, best_return
+    max_risk = {"low": 0.05, "medium": 0.15, "high": 0.3}[risk_level]
+
+    portfolio_return = sum(data[asset]["average_return"] for asset in portfolio)
+    portfolio_risk = sum(data[asset]["risk"] for asset in portfolio)
+
+    if portfolio_risk <= max_risk and portfolio_return > best[0]:
+        best = (portfolio_return, portfolio)
+
+    for asset in data:
+        if asset not in visited:
+            visited.add(asset)
+            best = aprofundamento_iterativo_recursivo(
+                data, max_depth, current_depth + 1, 
+                portfolio + [asset], risk_level, visited, best
+            )
+            visited.remove(asset)
+
+    return best
+
+def aprofundamento_iterativo_ii(data, budget, risk_level):
+    best_portfolio = (float("-inf"), [])
+
+    for max_depth in range(1, len(data)):
+        visited = set()
+        best_portfolio = aprofundamento_iterativo_recursivo(
+            data, max_depth, 0, [], risk_level, visited, best_portfolio
+        )
+    
+    return best_portfolio[1], best_portfolio[0]
 
 def otimizar_portfolio(ativos, investment_amount, investment_risk):
     data = buscar_ativos(ativos)
-    print("Dados dos ativos:")
+    print("Erros em ativos:")
     for asset, info in data.items():
         if 'erro' in info:
             print(f"{asset}: {info['erro']}")
@@ -57,7 +75,7 @@ def otimizar_portfolio(ativos, investment_amount, investment_risk):
     if not assets_validos:
         return { "Erro:": "Nenhum ativo válido para otimização. Verifique os tickers ou tente novamente." }
     
-    portfolio_interativo, retorno_interativo = aprofundamento_iterativo(assets_validos, investment_amount, investment_risk)
+    portfolio_interativo, retorno_interativo = aprofundamento_iterativo_ii(assets_validos, investment_amount, investment_risk)
     # portfolio_alpha_beta, retorno_alpha_beta = poda_alfa_beta(assets_validos, 3, 0.1, 0.1)
 
     alocacao_interativo = calcular_alocacao(portfolio_interativo, investment_amount, assets_validos)

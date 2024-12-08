@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 import yfinance as yf
 
 from .utils import create_forecast_plot, create_distribution_plot, create_risk_plot
-from .calculations import otimizar_portfolio
+from .calculations import otimizar_portfolio, aprofundamento_iterativo_ii
 
 main = Blueprint('main', __name__)
 
@@ -26,10 +26,9 @@ def calcular_risco():
     investment_risk = data.get("investmentRisk")  # Risco selecionado pelo usuário
 
     erros = []
-    
-    melhor_portfolio = otimizar_portfolio(investment_interest, investment_amount, investment_risk)
-    
-    print(melhor_portfolio)
+
+    melhor_portfolio_recursivo = otimizar_portfolio(investment_interest, investment_amount, investment_risk)
+    print(melhor_portfolio_recursivo)
 
     # create_forecast_plot(melhor_portfolio)  
     # create_distribution_plot(melhor_portfolio)

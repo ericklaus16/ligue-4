@@ -22,14 +22,13 @@ function handleCalculateInvestment() {
     let investmentRisk = document.querySelector('input[name="risk"]:checked').value;
 
     let timerInterval;
+    let startTime = Date.now();
 
     Swal.fire({
         title: "Olá, tudo bem?",
-        html: "Por favor aguarde <b></b> segundos enquanto nosso sistema faz alguns cálculos!",
-        timer: 3000, 
-        timerProgressBar: true,
+        html: "Por favor aguarde enquanto nosso sistema faz alguns cálculos!", 
         didOpen: () => {
-            Swal.showLoading();  // Exibe o carregamento
+            Swal.showLoading();
             const timer = Swal.getPopup().querySelector("b");
             timerInterval = setInterval(() => {
                 timer.textContent = `${(Swal.getTimerLeft() / 1000).toFixed(2)}`;
