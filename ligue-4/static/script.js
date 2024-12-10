@@ -6,12 +6,25 @@ let podeJogar = true;
 let metrics = [];
 
 function iniciarJogo() {
+    document.querySelector("#startButton").style.display = "none";
+    document.querySelector("#stopButton").style.display = "inline-block";
+    metrics = [];
+    document.querySelector("#algoritmo").disabled = true;
+    document.querySelector("#profundidade").disabled = true;
     document.querySelectorAll("li").forEach(li => li.remove());
     podeJogar = true;
     tabuleiro = Array(6).fill().map(() => Array(7).fill(0));
     jogador = 1;
     document.getElementById('status').innerText = 'Sua vez!';
     desenharTabuleiro();
+}
+
+function encerrarJogo(){
+    document.querySelector("#stopButton").style.display = "none";
+    document.querySelector("#startButton").style.display = "inline-block";
+    document.querySelector("#algoritmo").disabled = false;
+    document.querySelector("#profundidade").disabled = false;
+    document.getElementById('status').innerText = 'Jogo encerrado!';
 }
 
 function desenharTabuleiro() {
