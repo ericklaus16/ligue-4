@@ -25,6 +25,7 @@ function encerrarJogo(){
     document.querySelector("#algoritmo").disabled = false;
     document.querySelector("#profundidade").disabled = false;
     document.getElementById('status').innerText = 'Jogo encerrado!';
+    document.querySelector("#aiPerformance").style.display = "none";
 }
 
 function desenharTabuleiro() {
@@ -106,6 +107,8 @@ function jogar(col) {
                     document.getElementById('status').innerText = `Empate!`;
                     podeJogar = false;
                 }
+
+                document.querySelector("#aiPerformance").style.display = "inline-block";
             } else {
                 desenharTabuleiro();
             }
@@ -117,6 +120,25 @@ function jogar(col) {
             text: "O jogo já acabou! Você precisa reiniciar o jogo."
         });
     }
+}
+
+function mostrarPerformanceIA() {
+    let memoria_total = metrics.map(metric => metric.memoria_utilizada).reduce((acc, curr) => acc + curr, 0);
+    let nos_gerados = metrics.map(metric => metric.nos_gerados).reduce((acc, curr) => acc + curr, 0);
+    let nos_visitados = metrics.map(metric => metric.nos_visitados).reduce((acc, curr) => acc + curr, 0);
+    let tempo_execucao = metrics.map(metric => metric.tempo_execucao).reduce((acc, curr) => acc + curr, 0);    
+
+    Swal.fire({
+        title: "Como a nossa Inteligência Artificial performou?",
+        text: "Aqui estão as métricas da jogada da IA:",
+        html: `<ul>
+            <li><b>Memória utilizada:</b>&nbsp;${memoria_total.toFixed(2)}KB</li>
+            <li><b>Nós gerados:</b>&nbsp;${nos_gerados}</li>
+            <li><b>Nós visitados:</b>&nbsp;${nos_visitados}</li>
+            <li><b>Tempo de execução:</b>&nbsp;${tempo_execucao.toFixed(2)}s</li>
+        `,
+        icon: "info"
+    });
 }
 
 document.getElementById('algoritmo').addEventListener('change', function() {
