@@ -3,6 +3,8 @@ let jogador = 1; // Jogador começa
 let algoritmo = 'iterativo';
 let podeJogar = true;
 
+let metrics = [];
+
 function iniciarJogo() {
     document.querySelectorAll("li").forEach(li => li.remove());
     podeJogar = true;
@@ -29,10 +31,21 @@ function desenharTabuleiro() {
     }
 }
 
-function analisarMovimento() {
+function analisarMovimento(index) {
+    let memoria = metrics[index].memoria_utilizada;
+    let nos_gerados = metrics[index].nos_gerados;
+    let nos_visitados = metrics[index].nos_visitados;
+    let tempo_execucao = metrics[index].tempo_execucao;
+
     Swal.fire({
         title: "O que é isso?",
-        text: "Essa página ainda não foi implementada....",
+        text: "Aqui estão as métricas da jogada da IA:",
+        html: `<ul>
+            <li><b>Memória utilizada:</b>&nbsp;${memoria.toFixed(2)}KB</li>
+            <li><b>Nós gerados:</b>&nbsp;${nos_gerados}</li>
+            <li><b>Nós visitados:</b>&nbsp;${nos_visitados}</li>
+            <li><b>Tempo de execução:</b>&nbsp;${tempo_execucao.toFixed(2)}s</li>
+        `,
         icon: "question"
     });
 }
@@ -61,9 +74,10 @@ function jogar(col) {
         .then(response => response.json())
         .then(data => {
             tabuleiro = data.tabuleiro;
+            metrics.push(data.metrics);
 
             if(data.jogadaIA !== undefined){
-                document.getElementById('jogadas-ia').innerHTML += `<li onclick="analisarMovimento()">IA jogou Coluna ${data.jogadaIA+1}</li>`;
+                document.getElementById('jogadas-ia').innerHTML += `<li onclick="analisarMovimento(${metrics.length - 1})">IA jogou Coluna ${data.jogadaIA+1}</li>`;
             }
 
             if (data.vitoria) {

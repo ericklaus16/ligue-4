@@ -1,8 +1,13 @@
 from flask import Flask, render_template, request, jsonify
 import random
 import copy
+import time
+import tracemalloc
 
 app = Flask(__name__)
+
+nos_gerados = 0
+nos_visitados = 0
 
 # Função para criar o tabuleiro
 def criar_tabuleiro():
@@ -48,6 +53,32 @@ def fazer_movimento(tabuleiro, col, jogador):
             return tabuleiro
     return tabuleiro
 
+def medir_desempenho(func, *args, **kwargs):
+    global nos_gerados, nos_visitados
+    nos_gerados = 0
+    nos_visitados = 0
+
+    # Inicia medição de tempo e memória
+    tracemalloc.start()
+    start_time = time.time()
+
+    # Executar a função
+    resultado = func(*args, **kwargs)
+
+    # Finaliza medição de tempo e memória
+    end_time = time.time()
+    current, peak = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+
+    desempenho = {
+        "nos_gerados": nos_gerados,
+        "nos_visitados": nos_visitados,
+        "tempo_execucao": end_time - start_time,
+        "memoria_utilizada": peak / 1024
+    }
+
+    return resultado, desempenho
+
 def alpha_beta_iterativo(tabuleiro, profundidade, alpha, beta, maximizando):
     melhor_jogada = None
     melhor_valor = -float('inf') if maximizando else float('inf')
@@ -82,7 +113,10 @@ def jogada_iterativa(tabuleiro, profundidade_max):
 
 # Algoritmo de Poda Alpha-Beta
 def jogada_alpha_beta(tabuleiro, profundidade, alpha, beta, maximizando):
+    global nos_gerados, nos_visitados
+
     if profundidade == 0 or tabuleiro_cheio(tabuleiro) or verificar_vitoria(tabuleiro, 1) or verificar_vitoria(tabuleiro, 2):
+        nos_visitados += 1
         return avaliar(tabuleiro)
     
     if maximizando:
@@ -90,6 +124,7 @@ def jogada_alpha_beta(tabuleiro, profundidade, alpha, beta, maximizando):
         melhor_jogada = None
         for col in range(7):
             if tabuleiro[0][col] == 0:
+                nos_gerados += 1
                 tabuleiro_copy = copy.deepcopy(tabuleiro)
                 fazer_movimento(tabuleiro_copy, col, 2)
                 valor = jogada_alpha_beta(tabuleiro_copy, profundidade - 1, alpha, beta, False)
@@ -125,7 +160,7 @@ def ia_jogada(tabuleiro, algoritmo="iterativo", profundidade=3):
             tabuleiro_copy = copy.deepcopy(tabuleiro)
             fazer_movimento(tabuleiro_copy, col, 2)
             if verificar_vitoria(tabuleiro_copy, 2):
-                return col
+                return col, {"nos_gerados": 0, "nos_visitados": 0, "tempo_execucao": 0, "memoria_utilizada": 0}
 
     # Verificar bloqueio de vitória adversária
     for col in range(7):
@@ -133,13 +168,15 @@ def ia_jogada(tabuleiro, algoritmo="iterativo", profundidade=3):
             tabuleiro_copy = copy.deepcopy(tabuleiro)
             fazer_movimento(tabuleiro_copy, col, 1)
             if verificar_vitoria(tabuleiro_copy, 1):
-                return col
+                return col, {"nos_gerados": 0, "nos_visitados": 0, "tempo_execucao": 0, "memoria_utilizada": 0}
 
     # Caso nenhum ganho ou bloqueio imediato, usar algoritmo
     if algoritmo == "iterativo":
-        return jogada_iterativa(tabuleiro, profundidade)
+        jogada, desempenho = medir_desempenho(jogada_iterativa, tabuleiro, profundidade)
     elif algoritmo == "alpha_beta":
-        return jogada_alpha_beta(tabuleiro, profundidade, -float('inf'), float('inf'), True)
+        jogada, desempenho = medir_desempenho(jogada_alpha_beta, tabuleiro, profundidade, -float('inf'), float('inf'), True)
+
+    return jogada, desempenho
 
 def avaliar_posicao(tabuleiro, row, col):
     jogador = tabuleiro[row][col]
@@ -171,7 +208,6 @@ def avaliar_posicao(tabuleiro, row, col):
 # Função de avaliação para Poda Alpha-Beta
 def avaliar(tabuleiro):
     score = 0
-
     
     if verificar_vitoria(tabuleiro, 2):
         return 10000  # Vitória da IA
@@ -210,14 +246,14 @@ def jogar():
         return jsonify({"tabuleiro": tabuleiro, "vitoria": jogador})
     
     # Jogada da IA
-    ia_col = ia_jogada(tabuleiro, algoritmo=algoritmo, profundidade=5)  # Profundidade de 3
+    ia_col, metrics = ia_jogada(tabuleiro, algoritmo=algoritmo, profundidade=6)  # Profundidade de 6
     tabuleiro = fazer_movimento(tabuleiro, ia_col, 2)
     
     # Verificar vitória da IA
     if verificar_vitoria(tabuleiro, 2):
-        return jsonify({"tabuleiro": tabuleiro, "vitoria": 2})
+        return jsonify({"tabuleiro": tabuleiro, "vitoria": 2, "metrics": metrics})
     
-    return jsonify({"tabuleiro": tabuleiro, "jogadaIA": ia_col})
+    return jsonify({"tabuleiro": tabuleiro, "jogadaIA": ia_col, "metrics": metrics})
 
 if __name__ == "__main__":
     app.run(debug=True)
