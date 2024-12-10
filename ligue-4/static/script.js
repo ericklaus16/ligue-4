@@ -51,6 +51,8 @@ function analisarMovimento(index) {
 }
 
 function jogar(col) {
+    const profundidade = document.querySelector("#profundidade").value;
+
     if(podeJogar){
         if (tabuleiro[0][col] !== 0) return; // Coluna cheia
 
@@ -68,7 +70,7 @@ function jogar(col) {
                 jogador: jogador,
                 col: col,
                 algoritmo: algoritmo,
-                profundidade: 3
+                profundidade: profundidade
             })
         })
         .then(response => response.json())

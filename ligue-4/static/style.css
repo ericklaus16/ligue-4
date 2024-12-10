@@ -8,6 +8,17 @@ body {
     margin: auto;
 }
 
+#profundidade {
+    width: 15%;
+    margin: 20px auto;
+    font-size: 16px;
+    text-align: center;
+    border: 2px solid #4CAF50;
+    border-radius: 8px;
+    color: #333;
+    transition: all 0.3s ease-in-out;
+}
+
 .linha {
     display: flex;
     justify-content: center;

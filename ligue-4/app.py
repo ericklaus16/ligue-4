@@ -237,6 +237,7 @@ def jogar():
     jogador = data['jogador']
     col = data['col']
     algoritmo = data['algoritmo']
+    profundidade_recebida = int(data['profundidade'])
     
     # Jogada do jogador
     tabuleiro = fazer_movimento(tabuleiro, col, jogador)
@@ -246,7 +247,7 @@ def jogar():
         return jsonify({"tabuleiro": tabuleiro, "vitoria": jogador})
     
     # Jogada da IA
-    ia_col, metrics = ia_jogada(tabuleiro, algoritmo=algoritmo, profundidade=6)  # Profundidade de 6
+    ia_col, metrics = ia_jogada(tabuleiro, algoritmo=algoritmo, profundidade=profundidade_recebida)  # Profundidade de 6
     tabuleiro = fazer_movimento(tabuleiro, ia_col, 2)
     
     # Verificar vitória da IA
