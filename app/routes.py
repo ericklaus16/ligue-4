@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify
 import yfinance as yf
 
 from .utils import create_forecast_plot, create_distribution_plot, create_risk_plot
-from .calculations import otimizar_portfolio, aprofundamento_iterativo_ii
+from .calculations import otimizar_portfolio
 
 main = Blueprint('main', __name__)
 

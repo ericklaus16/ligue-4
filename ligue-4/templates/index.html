@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conecta 4 - Jogo</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Conecta 4</h1>
+        <div>
+            <label for="algoritmo">Escolha o algoritmo da IA:</label>
+            <select id="algoritmo">
+                <option value="iterativo">Aprofundamento Iterativo</option>
+                <option value="alpha_beta">Poda Alpha-Beta</option>
+            </select>
+        </div>
+        <div id="jogo">
+            <div id="jogador">
+                <p>Suas jogadas:</p>
+                <ul id="jogadas-jogador"></ul>
+            </div>
+            <div id="tabuleiro"></div>
+            <div id="ia">
+                <p>Jogadas da IA:</p>
+                <ul id="jogadas-ia"></ul>
+            </div>
+        </div>
+        <div id="status"></div>
+        <div>
+            <button onclick="iniciarJogo()">Iniciar Jogo</button>
+        </div>
+    </div>
+    
+    <script src="../static/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</body>
+</html>
