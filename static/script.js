@@ -8,6 +8,7 @@ let metrics = [];
 function iniciarJogo() {
     document.querySelector("#startButton").style.display = "none";
     document.querySelector("#stopButton").style.display = "inline-block";
+    document.querySelector("#aiPerformance").style.display = "none";
     metrics = [];
     document.querySelector("#algoritmo").disabled = true;
     document.querySelector("#profundidade").disabled = true;
@@ -21,11 +22,11 @@ function iniciarJogo() {
 
 function encerrarJogo(){
     document.querySelector("#stopButton").style.display = "none";
+    document.querySelector("#aiPerformance").style.display = "inline-block";
     document.querySelector("#startButton").style.display = "inline-block";
     document.querySelector("#algoritmo").disabled = false;
     document.querySelector("#profundidade").disabled = false;
     document.getElementById('status').innerText = 'Jogo encerrado!';
-    document.querySelector("#aiPerformance").style.display = "none";
     
     let memoria_total = metrics.map(metric => metric.memoria_utilizada).reduce((acc, curr) => acc + curr, 0);
     let nos_gerados = metrics.map(metric => metric.nos_gerados).reduce((acc, curr) => acc + curr, 0);

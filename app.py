@@ -92,8 +92,6 @@ def alpha_beta_iterativo(tabuleiro, profundidade, alpha, beta, maximizando):
     melhor_jogada = None
     melhor_valor = -float('inf') if maximizando else float('inf')
 
-    nos_gerados_local = 0
-
     for col in range(7):
         # Verificar se a coluna está vazia
         if tabuleiro[0][col] == 0:
