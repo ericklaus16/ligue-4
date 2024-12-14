@@ -26,6 +26,17 @@ function encerrarJogo(){
     document.querySelector("#profundidade").disabled = false;
     document.getElementById('status').innerText = 'Jogo encerrado!';
     document.querySelector("#aiPerformance").style.display = "none";
+    
+    let memoria_total = metrics.map(metric => metric.memoria_utilizada).reduce((acc, curr) => acc + curr, 0);
+    let nos_gerados = metrics.map(metric => metric.nos_gerados).reduce((acc, curr) => acc + curr, 0);
+    let nos_visitados = metrics.map(metric => metric.nos_visitados).reduce((acc, curr) => acc + curr, 0);
+    let tempo_execucao = metrics.map(metric => metric.tempo_execucao).reduce((acc, curr) => acc + curr, 0);    
+    console.log({
+        memoria_total,
+        nos_gerados,
+        nos_visitados,
+        tempo_execucao
+    })
 }
 
 function desenharTabuleiro() {

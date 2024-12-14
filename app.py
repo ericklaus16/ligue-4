@@ -1,3 +1,8 @@
+# Integrantes: 
+# Eric Klaus Brenner Melo e Santos
+# Matheus Rogério Pesarini
+# Ruan Rubino de Carvalho
+
 from flask import Flask, render_template, request, jsonify
 import random
 import copy
@@ -11,14 +16,14 @@ nos_visitados = 0
 
 # Função para criar o tabuleiro
 def criar_tabuleiro():
-    return [[0 for _ in range(7)] for _ in range(6)]
+    return [[0 for _ in range(7)] for _ in range(6)] # 6 linhas e 7 colunas
 
 # Função para verificar se alguém venceu
 def verificar_vitoria(tabuleiro, jogador):
     # Verificar linhas
     for row in range(6):
         for col in range(4):
-            if all(tabuleiro[row][col + i] == jogador for i in range(4)):
+            if all(tabuleiro[row][col + i] == jogador for i in range(4)): 
                 return True
 
     # Verificar colunas
@@ -53,8 +58,9 @@ def fazer_movimento(tabuleiro, col, jogador):
             return tabuleiro
     return tabuleiro
 
+# Função para medir desempenho
 def medir_desempenho(func, *args, **kwargs):
-    global nos_gerados, nos_visitados
+    global nos_gerados, nos_visitados # Variáveis globais para contagem de nós gerados e visitados
     nos_gerados = 0
     nos_visitados = 0
 
@@ -70,6 +76,7 @@ def medir_desempenho(func, *args, **kwargs):
     current, peak = tracemalloc.get_traced_memory()
     tracemalloc.stop()
 
+    # Resultado e desempenho
     desempenho = {
         "nos_gerados": nos_gerados,
         "nos_visitados": nos_visitados,
@@ -79,16 +86,23 @@ def medir_desempenho(func, *args, **kwargs):
 
     return resultado, desempenho
 
+# Algoritmo de Aprofundamento Iterativo
 def alpha_beta_iterativo(tabuleiro, profundidade, alpha, beta, maximizando):
+    global nos_gerados # Variável global para contagem de nós gerados
     melhor_jogada = None
     melhor_valor = -float('inf') if maximizando else float('inf')
 
+    nos_gerados_local = 0
+
     for col in range(7):
+        # Verificar se a coluna está vazia
         if tabuleiro[0][col] == 0:
+            nos_gerados += 1
             tabuleiro_copy = copy.deepcopy(tabuleiro)
             fazer_movimento(tabuleiro_copy, col, 2 if maximizando else 1)
             valor = jogada_alpha_beta(tabuleiro_copy, profundidade - 1, alpha, beta, not maximizando)
 
+            # Atualizar melhor valor e jogada
             if maximizando and valor > melhor_valor:
                 melhor_valor = valor
                 melhor_jogada = col
@@ -115,10 +129,12 @@ def jogada_iterativa(tabuleiro, profundidade_max):
 def jogada_alpha_beta(tabuleiro, profundidade, alpha, beta, maximizando):
     global nos_gerados, nos_visitados
 
+    # Verificar condições de parada
     if profundidade == 0 or tabuleiro_cheio(tabuleiro) or verificar_vitoria(tabuleiro, 1) or verificar_vitoria(tabuleiro, 2):
         nos_visitados += 1
         return avaliar(tabuleiro)
     
+    # Gerar nós
     if maximizando:
         melhor_valor = -float('inf')
         melhor_jogada = None
@@ -136,6 +152,7 @@ def jogada_alpha_beta(tabuleiro, profundidade, alpha, beta, maximizando):
                     break
         return melhor_jogada
     else:
+        # Minimizar
         melhor_valor = float('inf')
         melhor_jogada = None
         for col in range(7):
@@ -178,6 +195,7 @@ def ia_jogada(tabuleiro, algoritmo="iterativo", profundidade=3):
 
     return jogada, desempenho
 
+# Função para avaliar a posição do tabuleiro
 def avaliar_posicao(tabuleiro, row, col):
     jogador = tabuleiro[row][col]
     adversario = 1 if jogador == 2 else 2
@@ -226,10 +244,12 @@ def avaliar(tabuleiro):
 
     return score
 
+# Rota principal
 @app.route('/')
 def index():
     return render_template("index.html")
 
+# Rota para jogar
 @app.route('/jogar', methods=["POST"])
 def jogar():
     data = request.get_json()
@@ -244,7 +264,7 @@ def jogar():
     
     # Verificar vitória do jogador
     if verificar_vitoria(tabuleiro, jogador):
-        return jsonify({"tabuleiro": tabuleiro, "vitoria": jogador})
+        return jsonify({"tabuleiro": tabuleiro, "vitoria": jogador, "metrics": {"nos_gerados": 0, "nos_visitados": 0, "tempo_execucao": 0, "memoria_utilizada": 0}})
     
     # Jogada da IA
     ia_col, metrics = ia_jogada(tabuleiro, algoritmo=algoritmo, profundidade=profundidade_recebida)  # Profundidade de 6
